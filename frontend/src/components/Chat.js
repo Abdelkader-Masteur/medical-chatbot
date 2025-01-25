@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -32,34 +32,37 @@ const Chat = () => {
   return (
     <Box
       sx={{
-        maxWidth: 500,
+        width: "100%",
         margin: "auto",
         mt: 5,
         display: "flex",
         flexDirection: "column",
-        borderRadius: 2,
-        boxShadow: 3,
+        borderRadius: 3,
+        boxShadow: 4,
         overflow: "hidden",
+        bgcolor: "#212121",
       }}
     >
       <Typography
         variant="h6"
         sx={{
           textAlign: "center",
-          backgroundColor: "#1976d2",
-          color: "#fff",
+          backgroundColor: "#333333",
+          color: "#ffffff",
           p: 2,
+          fontWeight: "bold",
         }}
       >
-        Medical Chatbot
+        Let's chat !
       </Typography>
+
       <Paper
         elevation={3}
         sx={{
           height: 400,
           overflowY: "auto",
           p: 2,
-          bgcolor: "#f5f5f5",
+          bgcolor: "#1c1c1c",
         }}
       >
         <List>
@@ -70,16 +73,18 @@ const Chat = () => {
                 justifyContent:
                   msg.sender === "user" ? "flex-end" : "flex-start",
                 textAlign: msg.sender === "user" ? "right" : "left",
+                mb: 1,
               }}
             >
               <Paper
-                elevation={1}
+                elevation={2}
                 sx={{
-                  p: 1,
-                  bgcolor: msg.sender === "user" ? "#1976d2" : "#e0e0e0",
-                  color: msg.sender === "user" ? "#fff" : "#000",
+                  p: 2,
+                  bgcolor: msg.sender === "user" ? "#1976d2" : "#333333",
+                  color: "#fff",
                   borderRadius: 2,
                   maxWidth: "70%",
+                  boxShadow: 3,
                 }}
               >
                 <ListItemText primary={msg.text} />
@@ -88,7 +93,8 @@ const Chat = () => {
           ))}
         </List>
       </Paper>
-      <Box sx={{ display: "flex", p: 2, borderTop: "1px solid #ddd" }}>
+
+      <Box sx={{ display: "flex", p: 2, borderTop: "1px solid #444444" }}>
         <TextField
           fullWidth
           placeholder="Type a message..."
@@ -96,13 +102,29 @@ const Chat = () => {
           onChange={(e) => setInput(e.target.value)}
           variant="outlined"
           size="small"
-          sx={{ mr: 1 }}
+          sx={{
+            mr: 2,
+            bgcolor: "#ffffff",
+            borderRadius: 2,
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 2,
+              backgroundColor: "#fafafa",
+            },
+          }}
         />
         <Button
           variant="contained"
           color="primary"
           endIcon={<SendIcon />}
           onClick={sendMessage}
+          sx={{
+            bgcolor: "#1976d2",
+            "&:hover": {
+              bgcolor: "#1565c0",
+            },
+            textTransform: "none",
+            px: 2,
+          }}
         >
           Send
         </Button>
