@@ -5,10 +5,12 @@ import asyncio
 
 app = FastAPI()
 
+# manage active WebSocket connections
 class ConnectionManager:
     def __init__(self):
         self.active_connections = []
 
+    # accept and add a WebSocket connection
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)
@@ -30,6 +32,7 @@ bot_responses = [
     "Please provide more details so I can assist you better.",
 ]
 
+# WebSocket endpoint to handle client connections and interactions
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)

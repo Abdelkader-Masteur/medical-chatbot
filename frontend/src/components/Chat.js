@@ -16,8 +16,11 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isSocketConnected, setIsSocketConnected] = useState(false);
+
+  // Create a WebSocket connection
   const socket = new WebSocket("ws://localhost:8000/ws");
 
+  // Handle incoming messages from the server
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
     setMessages((prev) => [...prev, data]);
@@ -43,6 +46,7 @@ const Chat = () => {
     }
   };
 
+  // If the socket is not connected, display a loading spinner
   if (!isSocketConnected) {
     return (
       <Box
