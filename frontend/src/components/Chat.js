@@ -82,7 +82,7 @@ const Chat = () => {
           fontWeight: "bold",
         }}
       >
-        Let's chat !
+        Let's Chat !
       </Typography>
 
       <Paper
