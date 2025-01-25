@@ -1,11 +1,13 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+import random
+from fastapi import FastAPI, WebSocket
+from fastapi.websockets import WebSocketDisconnect
 import asyncio
 
 app = FastAPI()
 
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: list[WebSocket] = []
+        self.active_connections = []
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -14,20 +16,34 @@ class ConnectionManager:
     def disconnect(self, websocket: WebSocket):
         self.active_connections.remove(websocket)
 
-    async def send_message(self, message: str, websocket: WebSocket):
-        await websocket.send_text(message)
-
+    async def send_message(self, message: dict, websocket: WebSocket):
+        await websocket.send_json(message)
 
 manager = ConnectionManager()
+
+bot_responses = [
+    "I'm here to help you with your medical queries.",
+    "Can you tell me more about your symptoms?",
+    "I'm a chatbot, but I'll try my best to assist you.",
+    "Stay calm, I'm processing your request.",
+    "I'm sorry to hear you're feeling unwell. Let's figure this out together.",
+    "Please provide more details so I can assist you better.",
+]
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
-            data = await websocket.receive_text()
-            await manager.send_message(f"User said: {data}", websocket)
-            await asyncio.sleep(1)
-            await manager.send_message(f"Bot reply: I received your message: {data}", websocket)
+            user_message = await websocket.receive_text()
+            
+            bot_response = random.choice(bot_responses)
+
+            response_message = {
+                "sender": "bot",
+                "text": bot_response
+            }
+            
+            await manager.send_message(response_message, websocket)
     except WebSocketDisconnect:
         manager.disconnect(websocket)
