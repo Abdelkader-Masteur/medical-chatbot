@@ -8,17 +8,31 @@ import {
   List,
   ListItem,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
   const socket = new WebSocket("ws://localhost:8000/ws");
 
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
     setMessages((prev) => [...prev, data]);
+  };
+
+  socket.onopen = () => {
+    setIsSocketConnected(true);
+  };
+
+  socket.onerror = () => {
+    setIsSocketConnected(false);
+  };
+
+  socket.onclose = () => {
+    setIsSocketConnected(false);
   };
 
   const sendMessage = () => {
@@ -28,6 +42,21 @@ const Chat = () => {
       setInput("");
     }
   };
+
+  if (!isSocketConnected) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: 400,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -59,7 +88,7 @@ const Chat = () => {
       <Paper
         elevation={3}
         sx={{
-          height: 400,
+          height: 500,
           overflowY: "auto",
           p: 2,
           bgcolor: "#1c1c1c",
